@@ -27,9 +27,17 @@ const isConfigValid =
 if (isConfigValid) {
     try {
         app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-        auth = getAuth(app);
+
+        // Firestore and Storage are generally safe to initialize on the server
         db = getFirestore(app);
         storage = getStorage(app);
+
+        // Auth is VERY picky and often crashes during Next.js Prerendering/Build
+        // if it detects an environment it doesn't like or missing credentials.
+        // Only initialize it on the client side.
+        if (typeof window !== "undefined") {
+            auth = getAuth(app);
+        }
     } catch (error) {
         console.error("Firebase initialization failed:", error);
     }
