@@ -21,9 +21,9 @@ export function RSVPButton({ event }: RSVPButtonProps) {
     const [status, setStatus] = useState<"going" | "interested" | null>(null);
 
     useEffect(() => {
-        if (!user) return;
+        if (!user || !db) return;
         const checkRSVP = async () => {
-            const rsvpRef = doc(db, "rsvps", `${event.id}_${user.uid}`);
+            const rsvpRef = doc(db!, "rsvps", `${event.id}_${user.uid}`);
             const snap = await getDoc(rsvpRef);
             if (snap.exists()) {
                 setStatus(snap.data().status);
