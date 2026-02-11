@@ -1,5 +1,6 @@
 import { LoginForm } from "@/components/auth/login-form";
 import { GoogleAuthButton } from "@/components/auth/google-auth-button";
+import { GithubAuthButton } from "@/components/auth/github-auth-button";
 import { Suspense } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
@@ -34,9 +35,14 @@ export default function LoginPage() {
                             </span>
                         </div>
                     </div>
-                    <Suspense fallback={<div>Loading...</div>}>
-                        <GoogleAuthButton />
-                    </Suspense>
+                    <div className="grid grid-cols-2 gap-4">
+                        <Suspense fallback={<div>Loading...</div>}>
+                            <GoogleAuthButton />
+                        </Suspense>
+                        <Suspense fallback={<div>Loading...</div>}>
+                            <GithubAuthButton />
+                        </Suspense>
+                    </div>
                 </CardContent>
                 <CardFooter className="flex justify-center">
                     <p className="text-sm text-muted-foreground">
