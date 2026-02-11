@@ -40,9 +40,13 @@ export function LoginForm() {
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        if (!auth) {
+            toast.error("Firebase is not initialized");
+            return;
+        }
         setIsLoading(true);
         try {
-            await signInWithEmailAndPassword(auth, values.email, values.password);
+            await signInWithEmailAndPassword(auth!, values.email, values.password);
             toast.success("Logged in successfully");
             router.push(callbackUrl);
         } catch (error: any) {

@@ -25,17 +25,17 @@ export function EventDetailView({ eventId }: EventDetailViewProps) {
 
     useEffect(() => {
         const fetchEvent = async () => {
+            if (!db) return;
             try {
-                const docRef = doc(db, "events", eventId);
+                const docRef = doc(db!, "events", eventId);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    const { id, ...data } = docSnap.data() as Event;
-                    setEvent({ id: docSnap.id, ...data });
+                    const data = docSnap.data() as Event;
+                    setEvent(data);
 
-                    // Fetch host name
+                    // Fetch host details
                     if (data.hostId) {
-                        const hostRef = doc(db, "users", data.hostId);
+                        const hostRef = doc(db!, "users", data.hostId);
                         const hostSnap = await getDoc(hostRef);
                         if (hostSnap.exists()) {
                             setHostName(hostSnap.data().name);

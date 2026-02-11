@@ -17,14 +17,18 @@ export function GithubAuthButton() {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleGithubLogin = async () => {
+        if (!auth || !db) {
+            toast.error("Firebase is not initialized");
+            return;
+        }
         setIsLoading(true);
         try {
             const provider = new GithubAuthProvider();
-            const result = await signInWithPopup(auth, provider);
+            const result = await signInWithPopup(auth!, provider);
             const user = result.user;
 
             // Check if user exists in Firestore
-            const userRef = doc(db, "users", user.uid);
+            const userRef = doc(db!, "users", user.uid);
             const userSnap = await getDoc(userRef);
 
             if (!userSnap.exists()) {

@@ -64,8 +64,8 @@ export function CreateEventForm() {
     const isFree = form.watch("isFree");
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        if (!user) {
-            toast.error("You must be logged in to create an event");
+        if (!user || !db || !storage) {
+            toast.error("Required services not initialized");
             return;
         }
         if (!imageFile) {
@@ -80,7 +80,7 @@ export function CreateEventForm() {
         setIsLoading(true);
         try {
             // 1. Upload Image
-            const storageRef = ref(storage, `events/${user.uid}/${Date.now()}_${imageFile.name}`);
+            const storageRef = ref(storage!, `events/${user.uid}/${Date.now()}_${imageFile.name}`);
             const snapshot = await uploadBytes(storageRef, imageFile);
             const imageUrl = await getDownloadURL(snapshot.ref);
 

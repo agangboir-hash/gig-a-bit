@@ -25,11 +25,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [userRole, setUserRole] = useState<string | null>(null);
 
     useEffect(() => {
+        if (!auth) {
+            setLoading(false);
+            return;
+        }
+
         const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
             if (firebaseUser) {
                 setUser(firebaseUser);
                 try {
-                    const userRef = doc(db, "users", firebaseUser.uid);
+                    const userRef = doc(db!, "users", firebaseUser.uid);
                     const userSnap = await getDoc(userRef);
                     if (userSnap.exists()) {
                         setUserRole(userSnap.data().role);

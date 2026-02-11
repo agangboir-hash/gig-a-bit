@@ -46,19 +46,21 @@ export function SignupForm() {
     });
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        if (!auth || !db) {
+            toast.error("Firebase is not initialized");
+            return;
+        }
         setIsLoading(true);
         try {
-            // 1. Create user in Firebase Auth
-            const userCredential = await createUserWithEmailAndPassword(
-                auth,
+            // 1. Create User
+            const { user } = await createUserWithEmailAndPassword(
+                auth!,
                 values.email,
                 values.password
             );
 
-            const user = userCredential.user;
-
-            // 2. Create user document in Firestore
-            await setDoc(doc(db, "users", user.uid), {
+            // 2. Set Profile
+            await setDoc(doc(db!, "users", user.uid), {
                 id: user.uid,
                 name: values.name,
                 email: values.email,

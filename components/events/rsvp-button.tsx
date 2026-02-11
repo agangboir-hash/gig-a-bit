@@ -65,7 +65,7 @@ export function RSVPButton({ event }: RSVPButtonProps) {
 
         setLoading(true);
         try {
-            const rsvpRef = doc(db, "rsvps", `${event.id}_${user.uid}`);
+            const rsvpRef = doc(db!, "rsvps", `${event.id}_${user.uid}`);
 
             // Toggle logic or set "going"
             // If already going, maybe cancel? For now, simpler: just RSVP
