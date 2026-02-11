@@ -13,13 +13,18 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase defensively for build time
+// Initialize Firebase defensively for build time/SSR
 let app: FirebaseApp | undefined;
 let auth: Auth | undefined;
 let db: Firestore | undefined;
 let storage: FirebaseStorage | undefined;
 
-if (typeof window !== "undefined" || process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
+const isConfigValid =
+    firebaseConfig.apiKey &&
+    firebaseConfig.apiKey.length > 10 &&
+    firebaseConfig.apiKey !== "undefined";
+
+if (isConfigValid) {
     try {
         app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
         auth = getAuth(app);
